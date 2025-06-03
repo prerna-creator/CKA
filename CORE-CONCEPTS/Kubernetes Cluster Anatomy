@@ -1,0 +1,50 @@
+Kubernetes architecture consists of two primary types of nodes:
+Control Plane (Master Node)
+Worker Nodes
+
+Let’s break down the components and their workflows.
+
+🧠 Control Plane Components
+These components manage and maintain the entire cluster’s state.
+API Server:
+The first point of contact for any request in Kubernetes.
+Acts as the central gateway for communication between components.
+Only the API Server has direct access to etcd; no other component talks to it directly.
+ETCD:
+A distributed, consistent key-value store.
+Stores the entire cluster state, including nodes, pods, configs, and secrets.
+Controller Manager:
+Runs background reconciliation loops to ensure the actual state matches the desired state.
+Includes various controllers like Deployment, ReplicaSet, and Node Controller.
+Scheduler:
+Scans for unscheduled pods.
+Assigns them to the best-fit worker node based on resources and constraints.
+
+🔁 Control Plane Workflow
+A user (or automation tool) submits a request using kubectl, which goes to the API Server.
+The API Server authenticates and validates the request, and updates etcd with the desired state.
+The Scheduler assigns unscheduled pods to appropriate nodes.
+The Controller Manager ensures the cluster continuously matches the desired state (scaling, healing, etc.).
+All interactions with etcd happen only through the API Server.
+
+💪 Worker Node Components 
+These nodes are responsible for running application workloads.They are the execution muscle of the cluster.
+kubelet:
+Communicates with the API Server to receive pod definitions.
+Ensures the containers are running as described.
+kube-proxy:
+Manages networking rules.
+Facilitates communication between pods and services across the cluster.
+Container Runtime:
+Pulls images and starts containers.
+Examples include containerd, CRI-O (Docker is deprecated in newer Kubernetes versions).
+
+🔁 Worker Node Workflow 
+Once a pod is scheduled, the API Server notifies the kubelet on the assigned node.
+The kubelet pulls the image using the container runtime and starts the pod.
+Pod status and health are continuously reported back to the API Server.
+kube-proxy ensures proper routing and communication for the pod.
+
+🎯 Final Thought
+Think of the Control Plane as the brain🧠 of your cluster, making all the decisions, storing the desired state, and orchestrating behaviour.
+Meanwhile, the Worker Nodes are the muscle💪 executing tasks, running containers, and serving the actual workloads.
