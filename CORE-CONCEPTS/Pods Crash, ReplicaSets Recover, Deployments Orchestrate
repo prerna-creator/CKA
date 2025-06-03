@@ -1,0 +1,20 @@
+# CKA-Core-#2: Pods Crash, ReplicaSets Recover, Deployments Orchestrate
+
+Let’s continue the CKA journey. This time, we break down three building blocks of workload management in Kubernetes — **Pods, ReplicaSets, and Deployments** — and understand why they exist together, not in isolation.
+
+---
+
+## 🔹 What is a Pod?
+
+A **Pod** is the smallest deployable unit in Kubernetes, wrapping one or more containers that share storage, network, and lifecycle.  
+While a Pod can have multiple containers, we typically stick to **one container per Pod** for simplicity.
+
+❗ **Problem:**  
+If a Pod crashes or the node fails, Kubernetes won’t recreate it unless managed by another controller.
+
+---
+
+### 🛠️ YAML Hack – Generate Pod YAML via CLI
+
+```bash
+kubectl run mypod --image=nginx --dry-run=client -o yaml > pod.yaml
